@@ -1,9 +1,8 @@
 package com.example.demo.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -13,17 +12,21 @@ public class Author {
     private Integer authorId;
     private String name;
     private String email;
-    private Book authorBook; //1 to 1 relationship into book  PENDIENTE DE PONER LA SINTAXI
+    //private Book authorBook; //1 to 1 relationship into book  PENDIENTE DE PONER LA SINTAXI
+
+
+    // Relaciones
+    @OneToMany(mappedBy = "author")
+    private List<Book> bookList = new ArrayList<>();
 
     //Constructors
 
     public Author() {
     }
 
-    public Author(String name, String email, Book authorBook) {
+    public Author(String name, String email) {
         this.name = name;
         this.email = email;
-        this.authorBook = authorBook;
     }
 
     //Getters & Setters
@@ -52,11 +55,11 @@ public class Author {
         this.email = email;
     }
 
-    public Book getAuthorBook() {
-        return authorBook;
-    }
-
-    public void setAuthorBook(Book authorBook) {
-        this.authorBook = authorBook;
+    @Override
+    public String toString() {
+        return "Author{" +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

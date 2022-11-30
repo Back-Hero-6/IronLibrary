@@ -1,18 +1,29 @@
 package com.example.demo.models;
 
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 //Entity para identificar que es una representacion de una tabla de sql
 @Entity
 public class Book {
     //Id para identificar al isbn como el id de la tabla sql
     @Id
+    @OneToOne(mappedBy = "issueBook") //Relacion
     private String isbn;
     private String title;
     private String category;
     private Integer quantity;
+
+    //Relaciones
+    @ManyToOne
+    @JoinColumn(name = "student_usn")
+    private Student student;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Author author;
 
     //Constructores
 
@@ -60,4 +71,32 @@ public class Book {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "isbn='" + isbn + '\'' +
+                ", title='" + title + '\'' +
+                ", category='" + category + '\'' +
+                ", quantity=" + quantity +
+                ", author=" + author +
+                '}';
+    }
 }
+

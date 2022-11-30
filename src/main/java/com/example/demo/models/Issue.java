@@ -1,10 +1,7 @@
 package com.example.demo.models;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Issue {
@@ -13,8 +10,12 @@ public class Issue {
     private Integer issueId;
     private String issueDate;
     private String returnDate;
-    private Student issueStudent; // 1 to 1 relationship with student PENDIENTE DE PONER
-    private Book issueBook; // 1 to 1 relationship with book PENDIENTE DE PONER
+    @OneToOne //Relacion
+    @JoinColumn(name = "student_usn")
+    private Student issueStudent;
+    @OneToOne //Relacion
+    @JoinColumn(name = "isbn")
+    private Book issueBook;
 
 
     //Constructors
