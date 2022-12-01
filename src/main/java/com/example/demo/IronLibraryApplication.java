@@ -13,7 +13,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
@@ -32,12 +32,12 @@ public class IronLibraryApplication implements CommandLineRunner {
 		SpringApplication.run(IronLibraryApplication.class, args);
 	}
 
-	public static void chooseMenu(AuthorRepository authorRepository, BookRepository bookRepository, StudentRepository studentRepository, IssueRepository issueRepository) {
+	public static void runIronLibrary(AuthorRepository authorRepository, BookRepository bookRepository, StudentRepository studentRepository, IssueRepository issueRepository) {
 		Scanner sc = new Scanner(System.in);
 
 		int options = 1;
 		while (options != 0) {
-			//aparece le menu de opciones a escojer
+			//command menu
 			System.out.println(
 					"Choose an option\n" +
 							"1 Add a book\n" +
@@ -48,6 +48,7 @@ public class IronLibraryApplication implements CommandLineRunner {
 							"6 Issue book to student\n" +
 							"7 List books by usn\n" +
 							"8 Exit");
+
 			options = sc.nextInt();
 
 			switch (options) {
@@ -58,12 +59,12 @@ public class IronLibraryApplication implements CommandLineRunner {
 				}
 				case 2: {
 					//Search book by title
-					searchBookByTitle(bookRepository);
+					System.out.println(searchBookByTitle(bookRepository));
 					break;
 				}
 				case 3: {
 					//Search book by category
-					searchBookByCategory(bookRepository);
+					System.out.println(searchBookByCategory(bookRepository));
 					break;
 				}
 				case 4: {
@@ -88,8 +89,8 @@ public class IronLibraryApplication implements CommandLineRunner {
 				}
 				case 8: {
 					//Exit
-					System.out.println("Se procede a salir del programa");
-					sc.close();
+					System.out.println("Finalizing library system...");
+					System.exit(1);
 					break;
 				}
 				default:
@@ -116,13 +117,20 @@ public class IronLibraryApplication implements CommandLineRunner {
 		System.out.println("Please introduce the number of books: ");
 		Integer numberCopiesBook = sc.nextInt();
 
-		//create and save new author
-		Author author = authorRepository.save(new Author(nameAuthor, mailAuthor));
 		//create and save new book
 		Book book = bookRepository.save(new Book(isbnBook, titleBook, categoryBook, numberCopiesBook));
-		//set author to book and save it to repository
-		book.setAuthor(author);
-		bookRepository.save(book);
+
+		//create and save new author
+		if (authorRepository.findByEmail(mailAuthor).isPresent()) {
+			Author author = authorRepository.findByEmail(mailAuthor).get();
+			book.setAuthor(author);
+			bookRepository.save(book);
+		} else {
+			Author author = authorRepository.save(new Author(nameAuthor, mailAuthor));
+			//set author to book and save it to repository
+			book.setAuthor(author);
+			bookRepository.save(book);
+		}
 		sc.nextLine();
 	}
 
@@ -148,20 +156,24 @@ public class IronLibraryApplication implements CommandLineRunner {
 		return booksByCategory;
 	}
 
-	public static List<Book> searchBookByAuthor(BookRepository bookRepository) {
+	public static void searchBookByAuthor(BookRepository bookRepository) {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Introduce the name of the author you want: ");
-		String authorName = sc.next();
-		List<Book> booksByAuthor = bookRepository.findByAuthorName(authorName);
-		if (booksByAuthor.isEmpty()) {
+		String authorName = sc.nextLine();
+		if (bookRepository.findByAuthorName(authorName).size() > 0) {
+			for (Book b : bookRepository.findByAuthorName(authorName)) {
+				System.out.println(b);
+			}
+		} else {
 			System.err.println("No books from this author ");
 		}
-		return booksByAuthor;
 	}
 
-	public static List<Book> listBooksWithAuthor(BookRepository bookRepository) {
+	public static void listBooksWithAuthor(BookRepository bookRepository) {
 		System.out.println("Here are all the books available in our library: ");
-		return bookRepository.findAll();
+		for (Book b : bookRepository.findAll()) {
+			System.out.println(b);
+		}
 	}
 
 	public static void issueBookStudent(StudentRepository studentRepository, BookRepository bookRepository, IssueRepository issueRepository) {
@@ -170,35 +182,50 @@ public class IronLibraryApplication implements CommandLineRunner {
 		String studentUsn = sc.next();
 		System.out.println("Introduce the name of the student: ");
 		String studentName = sc.next();
-		Student student = studentRepository.save(new Student(studentUsn, studentName));
 		System.out.println("Introduce the ISBN of the book: ");
 		String bookIssueISBN = sc.next();
-		if (bookRepository.findByIsbn(bookIssueISBN).isPresent()) {
+		if (bookRepository.findByIsbn(bookIssueISBN).isPresent() && studentRepository.findByUsn(studentUsn).isPresent()) {
+			Student student = studentRepository.findByUsn(studentUsn).get();
 			Book book = bookRepository.findByIsbn(bookIssueISBN).get();
 			book.setQuantity(book.getQuantity() - 1);
 			bookRepository.save(book);
-			Issue issue = new Issue(LocalDate.now().toString(), LocalDate.now().plusDays(7).toString(), student, book);
+			Issue issue = new Issue(LocalDateTime.now().toString(), LocalDateTime.now().plusDays(7).toString(), student, book);
 			issueRepository.save(issue);
+			student.getIssueList().add(issue);
+			studentRepository.save(student);
+			System.out.println("Book issued. Return date : " + issue.getReturnDate());
+		} else if (bookRepository.findByIsbn(bookIssueISBN).isPresent() && studentRepository.findByUsn(studentUsn).isEmpty()) {
+			Student student = studentRepository.save(new Student(studentUsn, studentName));
+			Book book = bookRepository.findByIsbn(bookIssueISBN).get();
+			book.setQuantity(book.getQuantity() - 1);
+			bookRepository.save(book);
+			Issue issue = new Issue(LocalDateTime.now().toString(), LocalDateTime.now().plusDays(7).toString(), student, book);
+			issueRepository.save(issue);
+			student.getIssueList().add(issue);
+			studentRepository.save(student);
+			System.out.println("Book issued. Return date : " + issue.getReturnDate());
+		} else {
+			System.err.println("ISBN not available");
 		}
-		System.err.println("ISBN not available");
 	}
 
-
-	public static List<Issue> listBooksUsn(StudentRepository studentRepository, BookRepository bookRepository, IssueRepository issueRepository) {
+	public static void listBooksUsn(StudentRepository studentRepository, BookRepository bookRepository, IssueRepository issueRepository) {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Introduce the USN of the student: ");
-		String studentUsn = sc.next();
+		String studentUsn = sc.nextLine();
 		if (studentRepository.findByUsn(studentUsn).isPresent()) {
-			return studentRepository.findByUsn(studentUsn).get().getIssueList();
+			for (Issue i : issueRepository.findByIssueStudentUsn(studentUsn)) {
+				System.out.println(i);
+			}
+		} else {
+			System.err.println("USN not found");
 		}
-		System.err.println("USN not found");
-		return null;
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
 
-		chooseMenu(authorRepository, bookRepository, studentRepository, issueRepository);
+		runIronLibrary(authorRepository, bookRepository, studentRepository, issueRepository);
 
 	}
 }

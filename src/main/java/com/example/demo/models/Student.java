@@ -8,12 +8,11 @@ import java.util.List;
 @Entity
 public class Student {
     @Id
-    //@OneToOne(mappedBy = "issueStudent") //Revisar relacion
     private String usn;
     private String name;
 
-    //Relaciones
-    @OneToMany(mappedBy = "issueStudent")
+
+    @OneToMany(mappedBy = "issueStudent", fetch = FetchType.EAGER)
     private List<Issue> issueList = new ArrayList<>();
 
 

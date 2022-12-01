@@ -1,17 +1,15 @@
 package com.example.demo.models;
 
-
 import jakarta.persistence.*;
 
 @Entity
 public class Issue {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //Para definir que el valor authorId se autogenera
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer issueId;
     private String issueDate;
     private String returnDate;
-   // @OneToOne //Relacion
-   // @JoinColumn(name = "student_usn")
+
     @ManyToOne
     @JoinColumn(name = "student_usn")
     private Student issueStudent;
@@ -21,7 +19,6 @@ public class Issue {
 
 
     //Constructors
-
     public Issue() {
     }
 
@@ -72,5 +69,14 @@ public class Issue {
 
     public void setIssueBook(Book issueBook) {
         this.issueBook = issueBook;
+    }
+
+    @Override
+    public String toString() {
+        return "Issue{" +
+                "Book title = '" + issueBook.getTitle() + '\'' +
+                ",Student name = " + issueStudent.getName() +
+                ", returnDate='" + returnDate +
+                '}';
     }
 }

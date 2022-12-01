@@ -1,27 +1,21 @@
 package com.example.demo.models;
 
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Entity
 public class Author {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //Para definir que el valor authorId se autogenera
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer authorId;
     private String name;
     private String email;
-    //private Book authorBook; //1 to 1 relationship into book  PENDIENTE DE PONER LA SINTAXI
 
-
-    // Relaciones
     @OneToMany(mappedBy = "author")
     private List<Book> bookList = new ArrayList<>();
 
     //Constructors
-
     public Author() {
     }
 
@@ -31,7 +25,6 @@ public class Author {
     }
 
     //Getters & Setters
-
     public Integer getAuthorId() {
         return authorId;
     }

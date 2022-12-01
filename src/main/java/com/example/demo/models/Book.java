@@ -2,29 +2,19 @@ package com.example.demo.models;
 
 import jakarta.persistence.*;
 
-//Entity para identificar que es una representacion de una tabla de sql
 @Entity
 public class Book {
-    //Id para identificar al isbn como el id de la tabla sql
     @Id
-    //@OneToOne(mappedBy = "issueBook") //Relacion
     private String isbn;
     private String title;
     private String category;
     private Integer quantity;
 
-    //Relaciones
-    @ManyToOne
-    @JoinColumn(name = "student_usn")
-    private Student student;
-
     @ManyToOne
     @JoinColumn(name = "author_id")
     private Author author;
 
-    //Constructores
-
-    //Constructor vacio para el SQL obligatorio
+    //Constructors
     public Book() {
     }
 
@@ -67,14 +57,6 @@ public class Book {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
     }
 
     public Author getAuthor() {
