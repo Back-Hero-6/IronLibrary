@@ -11,12 +11,12 @@ import java.util.List;
 @Entity
 public class Student {
     @Id
-    @OneToOne(mappedBy = "issueStudent") //Relacion
+    //@OneToOne(mappedBy = "issueStudent") //Revisar relacion
     private String usn;
     private String name;
 
     //Relaciones
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "issueStudent")
     private List<Issue> issueList = new ArrayList<>();
 
 

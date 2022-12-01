@@ -8,7 +8,7 @@ import java.util.List;
 @Entity
 public class Author {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO) //Para definir que el valor authorId se autogenera
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //Para definir que el valor authorId se autogenera
     private Integer authorId;
     private String name;
     private String email;

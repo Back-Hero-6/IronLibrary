@@ -24,10 +24,8 @@ public class IronLibraryApplication implements CommandLineRunner {
 	AuthorRepository authorRepository;
 	@Autowired
 	BookRepository bookRepository;
-
 	@Autowired
 	StudentRepository studentRepository;
-
 	@Autowired
 	IssueRepository issueRepository;
 

@@ -1,16 +1,19 @@
 package com.example.demo.models;
 
 
+import javax.naming.Name;
 import javax.persistence.*;
 
 @Entity
 public class Issue {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO) //Para definir que el valor authorId se autogenera
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //Para definir que el valor authorId se autogenera
     private Integer issueId;
     private String issueDate;
     private String returnDate;
-    @OneToOne //Relacion
+   // @OneToOne //Relacion
+   // @JoinColumn(name = "student_usn")
+    @ManyToOne
     @JoinColumn(name = "student_usn")
     private Student issueStudent;
     @OneToOne //Relacion

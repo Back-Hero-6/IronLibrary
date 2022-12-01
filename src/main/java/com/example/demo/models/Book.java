@@ -10,7 +10,7 @@ import java.util.List;
 public class Book {
     //Id para identificar al isbn como el id de la tabla sql
     @Id
-    @OneToOne(mappedBy = "issueBook") //Relacion
+    @OneToOne//(mappedBy = "issueBook") //Relacion
     private String isbn;
     private String title;
     private String category;
