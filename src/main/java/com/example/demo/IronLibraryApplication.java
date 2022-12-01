@@ -8,7 +8,6 @@ import com.example.demo.repositories.AuthorRepository;
 import com.example.demo.repositories.BookRepository;
 import com.example.demo.repositories.IssueRepository;
 import com.example.demo.repositories.StudentRepository;
-import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -105,27 +104,25 @@ public class IronLibraryApplication implements CommandLineRunner {
 
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Please introduce a isbn: ");
-		String isbnBook = sc.next();
+		String isbnBook = sc.nextLine();
 		System.out.println("Please introduce a title: ");
-		String titleBook = sc.next();
+		String titleBook = sc.nextLine();
 		System.out.println("Please introduce a category: ");
-		String categoryBook = sc.next();
+		String categoryBook = sc.nextLine();
 		System.out.println("Please introduce the name of the author: ");
-		String nameAuthor = sc.next();
+		String nameAuthor = sc.nextLine();
 		System.out.println("Please introduce the mail of the author: ");
-		String mailAuthor = sc.next();
+		String mailAuthor = sc.nextLine();
 		System.out.println("Please introduce the number of books: ");
-		Integer numberCopiesBook = Integer.valueOf(sc.next());
+		Integer numberCopiesBook = sc.nextInt();
 
-		//create new author
-		Author author = new Author(nameAuthor, mailAuthor);
-		//guardar objeto autor al repositorio
-		authorRepository.save(author);
-		//create new book
-		Book book = new Book(isbnBook, titleBook, categoryBook, numberCopiesBook);
-		//guardar objeto book al repositorio
+		//create and save new author
+		Author author = authorRepository.save(new Author(nameAuthor, mailAuthor));
+		//create and save new book
+		Book book = bookRepository.save(new Book(isbnBook, titleBook, categoryBook, numberCopiesBook));
+		//set author to book and save it to repository
+		book.setAuthor(author);
 		bookRepository.save(book);
-
 		sc.nextLine();
 	}
 

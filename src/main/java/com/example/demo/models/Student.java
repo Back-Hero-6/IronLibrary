@@ -1,10 +1,7 @@
 package com.example.demo.models;
 
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 

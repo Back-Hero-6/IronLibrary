@@ -1,16 +1,13 @@
 package com.example.demo.models;
 
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.*;
 
 //Entity para identificar que es una representacion de una tabla de sql
 @Entity
 public class Book {
     //Id para identificar al isbn como el id de la tabla sql
     @Id
-    @OneToOne//(mappedBy = "issueBook") //Relacion
+    //@OneToOne(mappedBy = "issueBook") //Relacion
     private String isbn;
     private String title;
     private String category;

@@ -1,8 +1,7 @@
 package com.example.demo.models;
 
 
-import javax.naming.Name;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 public class Issue {
