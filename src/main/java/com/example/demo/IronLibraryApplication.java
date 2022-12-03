@@ -1,13 +1,7 @@
 package com.example.demo;
 
-import com.example.demo.models.Author;
-import com.example.demo.models.Book;
-import com.example.demo.models.Issue;
-import com.example.demo.models.Student;
-import com.example.demo.repositories.AuthorRepository;
-import com.example.demo.repositories.BookRepository;
-import com.example.demo.repositories.IssueRepository;
-import com.example.demo.repositories.StudentRepository;
+import com.example.demo.models.*;
+import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -187,13 +181,17 @@ public class IronLibraryApplication implements CommandLineRunner {
 		if (bookRepository.findByIsbn(bookIssueISBN).isPresent() && studentRepository.findByUsn(studentUsn).isPresent()) {
 			Student student = studentRepository.findByUsn(studentUsn).get();
 			Book book = bookRepository.findByIsbn(bookIssueISBN).get();
-			book.setQuantity(book.getQuantity() - 1);
-			bookRepository.save(book);
-			Issue issue = new Issue(LocalDateTime.now().toString(), LocalDateTime.now().plusDays(7).toString(), student, book);
-			issueRepository.save(issue);
-			student.getIssueList().add(issue);
-			studentRepository.save(student);
-			System.out.println("Book issued. Return date : " + issue.getReturnDate());
+			if (book.getQuantity() > 0) {
+				book.setQuantity(book.getQuantity() - 1);
+				bookRepository.save(book);
+				Issue issue = new Issue(LocalDateTime.now().toString(), LocalDateTime.now().plusDays(7).toString(), student, book);
+				issueRepository.save(issue);
+				student.getIssueList().add(issue);
+				studentRepository.save(student);
+				System.out.println("Book issued. Return date : " + issue.getReturnDate());
+			} else {
+				System.err.println("No book issues available for this ISBN");
+			}
 		} else if (bookRepository.findByIsbn(bookIssueISBN).isPresent() && studentRepository.findByUsn(studentUsn).isEmpty()) {
 			Student student = studentRepository.save(new Student(studentUsn, studentName));
 			Book book = bookRepository.findByIsbn(bookIssueISBN).get();

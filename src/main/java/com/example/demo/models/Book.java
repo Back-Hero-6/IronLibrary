@@ -2,6 +2,8 @@ package com.example.demo.models;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 public class Book {
     @Id
@@ -77,5 +79,6 @@ public class Book {
                 ", author=" + author +
                 '}';
     }
+
 }
 
