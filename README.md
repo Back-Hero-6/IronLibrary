@@ -36,7 +36,7 @@ This application allows you to navigate through a menu, concerning the four clas
 
 	-	Finally, you will have the possibility to exit the application.
 	
-	-       Please note that, for running unit tests, it is necessary to comment line 232 in class IronLibraryApplication.
+	-       Please note that, for running unit tests, it is necessary to comment line 225 in class IronLibraryApplication.
 
 4. Credits
 This IronLibrary Library Management System was developed by Susana, Victor, Javier and Gonzalo. We are part of the Ironhack Java intro to programming course. You can find us at https://github.com/Back-Hero-6.
